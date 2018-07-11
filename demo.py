@@ -1,29 +1,8 @@
 import numpy as np
 from scipy.integrate import odeint
-
+from equation import lotVol
 import matplotlib.pyplot as plt
-import math
 
-
-# y: used to iterated
-# t: interaval array
-# a,b,c,d,lm1,lm2,k1,k2: params 
-def lotVol(y,t,a,b,c,d,lm1,lm2,k1,k2,mt):
-    m1,ahl,m2,med = y
-
-    if m1<mt: k1=0
-    if ahl<0: ahl=0 
-    if med<0: med=0 
-    if m2<0: m2=0
-
-    dm1_dt = a*m1 - b*m1*med
-    dahl_dt = k1*dm1_dt - lm1*ahl
-    dm2_dt = c*m2*ahl - d*m2
-    dmed_dt = k2*dm2_dt - lm2*med
-
-    dydt = [ dm1_dt, dahl_dt, dm2_dt, dmed_dt ]
-
-    return dydt
 
 # initial condition
 vibrio_0 = 1
