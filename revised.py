@@ -54,8 +54,18 @@ params = (
 
 
 sol = odeint(lotVolRevised,y0,t,args=params)
-plt.plot(t, sol[:,0], 'r', label='vibrio')
-plt.plot(t, sol[:,2], 'b', label='e-coli')
-plt.legend(loc='best')
-plt.grid()
+
+# create a figure and add a subplot(111)
+fig, ax = plt.subplots()
+
+ax.set_title('Revised model')
+ax.plot(t, sol[:,0], 'r', label='vibrio')
+ax.plot(t, sol[:,2], 'b', label='e-coli')
+ax.set(xlabel='time ($hr^{-1}$)')
+ax.set(ylabel='concentration (M)')
+# open the legend box
+# 開啟圖例
+ax.legend(loc='best')
+ax.grid()
+
 plt.show()

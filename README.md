@@ -9,7 +9,7 @@ pip3 install -r requirements.txt
 ```
 
 ## Descritpion
-
+see [model.ipynb](model.ipynb)
 
 ## Note
-Because of you can not use mathjax in github README, and there is a great deal of display error in github showing .ipynb file. If you want to read it or do any change please download it and run ``` jupyter notebook```.
+Because of you can not use mathjax in github README, and there is some display error in github showing .ipynb file. If you want to read it properly or do any change please follow the installation it and run ``` jupyter notebook```.
