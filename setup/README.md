@@ -1,3 +1,7 @@
+
+[English](), [中文](README.zh-tw.md)
+
+
 ### Installation
 Python3
 Anaconda
@@ -9,6 +13,7 @@ VSCode
 
 
 ### Python virtual environment
+It is recommna
 venv
 
 

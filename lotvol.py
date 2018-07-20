@@ -51,7 +51,6 @@ ax.plot(t, sol[:,2], 'b', label='e-coli')
 ax.set(xlabel='time ($hr^{-1}$)')
 ax.set(ylabel='concentration (M)')
 # open the legend box
-# 開啟圖例
 ax.legend(loc='best')
 ax.grid()
 
