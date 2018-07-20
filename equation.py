@@ -1,27 +1,42 @@
 def lotVolRevised(
+    t,
     # initial condition
     y,
-    # time interval array
-    t,
-    # parameters 
-    ## Vibrio and AHL 
-    rV, Vm, a, kA, lmA, thes,
-    ## Ecoli and Nisin 
-    rE, Em, b, kN, lmN,
+    # required keyword parameters 
+    ## Vibrio and AHL
+    *, rV, Vm, a, kA, lmA, 
+    ## Ecoli and Nisin and Suicide(GP2)
+    b, c, lmE, kN, lmN, kS, lmS, thesV,
     ## mechincal 
     D ):
- 
-    V , A, E, N = y
 
-    if V<thes: kA=0
+    """
+    Solve the Vibio - Ecoli cometition model.
 
+    This equation this mainly used for scipy.integrate.solve_ivp
+    which is a new version of scipy.integrate.odeint 
+    """
+
+
+    V , A, E, N, S = y
+
+    if V>=thesV: kS=0
+    else: kN=0
+
+    if V<0: V=0
+    if A<0: A=0
+    if E<0: E=0
+    if N<0: N=0
+    if S<0: S=0
+    
     dV_dt = (rV-D)*V - (rV/Vm)*pow(V,2) - a*V*N
     dA_dt = kA*V - lmA*A
-    dE_dt = (rE-D)*V - (rE/Em)*pow(E,2) - b*E*A
+    dE_dt = b*E*A - c*E*S - lmS*E - D*E
     dN_dt = kN*E - lmN*N
+    dS_dt = kS*E - lmS*S
 
-    dydt = [dV_dt, dA_dt, dE_dt, dN_dt]
 
+    dydt = [dV_dt, dA_dt, dE_dt, dN_dt, dS_dt]
     return dydt
 
 
