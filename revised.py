@@ -1,71 +1,83 @@
 import numpy as np
-from scipy.integrate import odeint
+from scipy.integrate import solve_ivp
 from equation import lotVolRevised
 import matplotlib.pyplot as plt
 
-
 # initial condition
-vibrio_0 = 0.5
+vibrio_0 = 0.2
 ahl_0 = 0
 ecoli_0 = 0.1
 nisin_0 = 0
+suicide_0 = 0
 
-# parameters 
-## Vibrio and AHL associated
-Vibrio_GrothRate = 0.02
-Vibrio_MaxCapacity = 1
-Nisin_Vibrio_Binding_Strength = 0.05
+params = {
+   ## Vibrio and AHL associated:
+    # Vibrio_GrothRate
+    'rV': 0.02,
+    # Vibrio_MaxCapacity
+    'Vm': 1,
+    # Nisin_Vibrio_Binding_Strength
+    'a': 0.05,
+    # Ahl_Secrete_Ratio
+    'kA': 0.02,
+    # Ahl_DecayRate
+    'lmA': 0.01,
+    
+   ## Ecoli, Nisin, Suicide associated:
+    # Ahl_Ecoli_Binding_Strength
+    'b': 0.01,
+    # Suicide_Ecoli_Binding_Strength
+    'c': 0.04,
+    # Ecoli_DeathRate
+    'lmE': 0.01,
+    # Nsin_Sectete_Ratio
+    'kN': 0.02,
+    # Nisin_DecayRate
+    'lmN': 0.01,
+    # Suicide_Secrete_Ratio
+    'kS': 0.03,
+    # Suicide_DeacyRate
+    'lmS': 0.01,
+    # Vibrio_Threshold
+    'thesV': 0.6,
+    
+   ## Mechnical:
+    # Dilution_Rate
+    'D': 0
+}
 
-Ahl_Secrete_Ratio = 0.02
-Ahl_DecayRate = 0.01
-Ahl_Secrete_Threshod = 0
-
-## Ecoli and Nisin associated
-Ecoli_GrothRate = 0.02
-Ecoli_MaxCapacity = 1
-Ahl_Ecoli_Binding_Strength = 0.05
-
-Nsin_Sectete_Ratio = 0.03
-Nisin_DecayRate = 0.01
-
-## Mechenical associated
-Dilution_Rate = 0
-
-
-# time interval
-t = np.arange(0,1000,0.1)
 
 # load data
-y0 = [vibrio_0, ahl_0, ecoli_0, nisin_0]
-params = (
-    Vibrio_GrothRate,
-    Vibrio_MaxCapacity,
-    Nisin_Vibrio_Binding_Strength,
-    Ahl_Secrete_Ratio,
-    Ahl_DecayRate,
-    Ahl_Secrete_Threshod,
-    Ecoli_GrothRate,
-    Ecoli_MaxCapacity,
-    Ahl_Ecoli_Binding_Strength,
-    Nsin_Sectete_Ratio,
-    Nisin_DecayRate,
-    Dilution_Rate
-)
+t_span = [0,10000] 
+y_0 = [vibrio_0, ahl_0, ecoli_0, nisin_0, suicide_0]
 
 
-sol = odeint(lotVolRevised,y0,t,args=params)
+sol = solve_ivp(
+    lambda t_span, y_0: lotVolRevised(t_span, y_0,**params),t_span, y_0)
+    # ,t_eval=np.arange(0,10000,0.01) )
 
-# create a figure and add a subplot(111)
-fig, ax = plt.subplots()
 
-ax.set_title('Revised model')
-ax.plot(t, sol[:,0], 'r', label='vibrio')
-ax.plot(t, sol[:,2], 'b', label='e-coli')
-ax.set(xlabel='time ($hr^{-1}$)')
-ax.set(ylabel='concentration (M)')
-# open the legend box
-# 開啟圖例
-ax.legend(loc='best')
-ax.grid()
+# create a figure and add two subplot
+fig, (ax1,ax2) = plt.subplots(1,2)
+# figure title
+fig.suptitle('Revised model')
+# title of subplot 1
+ax1.set_title('M - t')
+ax1.plot(sol.t, sol.y[0], 'tomato', label='vibrio')
+ax1.plot(sol.t, sol.y[2], 'dodgerblue', label='e-coli')
+ax1.set(ylabel='concentration (M)')
+ax1.set(xlabel='time ($min^{-1}$)')
+# open the legend box and auto adjust location
+ax1.legend(loc='best')
+ax1.grid()
 
+# title of subplot 2
+ax2.set_title('V - E')
+ax2.plot(sol.y[0], sol.y[2],'g')
+ax2.set(ylabel='Vibrio (M)')
+ax2.set(xlabel='Ecoli (M)')
+ax1.grid()
+# prevention of firgure overlap
+plt.tight_layout()
+plt.savefig('revised.png')
 plt.show()
