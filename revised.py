@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # initial condition
 vibrio_0 = 0.2
 ahl_0 = 0
-ecoli_0 = 0.1
+ecoli_0 = 0.01
 nisin_0 = 0
 suicide_0 = 0
 
@@ -35,11 +35,11 @@ params = {
     # Nisin_DecayRate
     'lmN': 0.01,
     # Suicide_Secrete_Ratio
-    'kS': 0.03,
+    'kS': 0.04,
     # Suicide_DeacyRate
     'lmS': 0.01,
     # Vibrio_Threshold
-    'thesV': 0.6,
+    'thesV': 0.4,
     
    ## Mechnical:
     # Dilution_Rate
@@ -59,10 +59,9 @@ sol = solve_ivp(
 
 # create a figure and add two subplot
 fig, (ax1,ax2) = plt.subplots(1,2)
-# figure title
-fig.suptitle('Revised model')
+
 # title of subplot 1
-ax1.set_title('M - t')
+ax1.set_title('Revolution of time')
 ax1.plot(sol.t, sol.y[0], 'tomato', label='vibrio')
 ax1.plot(sol.t, sol.y[2], 'dodgerblue', label='e-coli')
 ax1.set(ylabel='concentration (M)')
@@ -72,12 +71,11 @@ ax1.legend(loc='best')
 ax1.grid()
 
 # title of subplot 2
-ax2.set_title('V - E')
-ax2.plot(sol.y[0], sol.y[2],'g')
+ax2.set_title('Phase diagram')
+ax2.plot(sol.y[0], sol.y[2],'mediumseagreen')
 ax2.set(ylabel='Vibrio (M)')
 ax2.set(xlabel='Ecoli (M)')
 ax1.grid()
 # prevention of firgure overlap
 plt.tight_layout()
-plt.savefig('revised.png')
-plt.show()
+plt.savefig('result.png')
